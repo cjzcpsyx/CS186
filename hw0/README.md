@@ -38,17 +38,36 @@ You have access to two repositories in the `berkeley-cs186` GitHub organization:
 
 Each assignment resides in a different top-level directory. Each assignment has a `README` which contains instructions, as well as the necessary files for that particular assignment. (For instance, the instruction you are reading right now are located [here](http://github.com/berkeley-cs186/course/blob/master/hw0/README.md).)
 
-Your personal repository will initially contain the skeleton code for assignment 0. As you work on assignments, take advantage of `git` to organize your work both locally and remotely.
+Your personal repository currently should be empty.
+
+## Setting up your repositories
+
+You should first set up a local repository.
+
+    $ cd ~
+
+Clone your personal repository. It should be empty.
+
+    $ git clone "https://github.com/berkeley-cs186/xx.git"
+
+Enter the cloned repository, track the course repository and clone it.
+
+    $ cd xx/
+    $ git remote add course "https://github.com/berkeley-cs186/course.git"
+    $ git clone course
+
+Push clone to your personal repository.
+
+    $ git push origin master
+
+Please keep in mind that you will have *two* remote repositories. `course` will be what we release as homework and project skeletons, and the other one will be your personal repository -- you can set this up as `personal`, `origin`, or whatever else you'd prefer. Make sure you try to `rebase` from and `push` to the right repositories by specifying the name when you run your git commands. 
+
 
 ## Receiving new assignments and assignment updates
 
-We will release new assignments by registering them as commits in the official course repository. From time to time, it may also be necessary to receive updates to our assignments (even though we try to release them as "perfectly" as possible the first time). To receive these updates, you must first set up your local repository remotes to track our repository:
+We will release new assignments by registering them as commits in the official course repository. From time to time, it may also be necessary to receive updates to our assignments (even though we try to release them as "perfectly" as possible the first time). Assuming you set up the tracking correctly, you can simply run this following command to receive new assignments and/or updates:
 
-    $ git remote add course "https://github.com/berkeley-cs186/course.git"
-
-Afterwards, you can pull any changes in course information from this remote.
-
-Please keep in mind that you will have *two* remote repositories. `course` will be what we release as homework and project skeletons, and the other one will be your personal repository -- you can set this up as `personal`, `origin`, or whatever else you'd prefer. Make sure you try to `rebase` from and `push` to the right repositories by specifying the name when you run your git commands. 
+    $ git pull course master
 
 ## Submitting assignments
 
