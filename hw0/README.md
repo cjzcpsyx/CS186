@@ -54,7 +54,7 @@ Enter the cloned repository, track the course repository and clone it.
 
     $ cd xx/
     $ git remote add course "https://github.com/berkeley-cs186/course.git"
-    $ git clone course
+    $ git pull course master
 
 Push clone to your personal repository.
 
