@@ -2,7 +2,7 @@
 
 In this assignment, you will set up the tools needed to submit assignments in CS 186.
 
-This assignment is due **Friday, September 4** at **11:59 p.m. PST**.
+This assignment is due **Monday, September 7** at **11:59 p.m. PST**.
 
 ## Instructions (brief)
 1. If you don't have one yet, create a GitHub account.
@@ -22,9 +22,7 @@ There are many guides to using `git` online - [here](http://git-scm.com/book/en/
 
 If you don't yet have a GitHub account, create one by following the instructions [here](https://help.github.com/articles/set-up-git/).
 
-**Afterwards, register that account with us by completing [this form](http://goo.gl/forms/WB4RjBnZSp). If you make a mistake filling it out, you can revisit this link to correct it. Please fill out this form by Friday September 4.**
-
-By the end of Friday, you should receive an e-mail which confirms your registration with us. If you do not, please check that you've filled out the form correctly, and then post a private note on Piazza (visible to instructors only) to let us know as soon as possible.
+**Afterwards, register that account with us by completing [this form](http://goo.gl/forms/WB4RjBnZSp). If you make a mistake filling it out, you can revisit this link to correct it. Please fill out this form by Monday September 7.**
 
 # Submitting Assignments in CS 186
 
