@@ -47,7 +47,7 @@ public class YelpQueries
 
       // Question 4
       statement.execute("DROP VIEW IF EXISTS q4");
-      String q4 = "CREATE VIEW q2 AS "
+      String q4 = "CREATE VIEW q4 AS "
                   + "SELECT 1"; // Replace this line
       statement.execute(q4);
 
