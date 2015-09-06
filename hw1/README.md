@@ -52,7 +52,7 @@ For example, consider a hypothetical question 0: "What is the total number of re
 Create views for the following queries:
 
 1. Find the average number of reviews left by all users who have rated less than 10 times.
-2. What are the names of the users created after November 2014 and have rated more than 50 times?
+2. What are the names of the users created after November 2014 and have left more than 50 reviews?
 3. What are the names and stars of all businesses rated higher than 3 stars in Pittsburgh?
 4. What is the name of the lowest rated business in Las Vegas with at least 500 reviews?
 5. What are the names of the 5 businesses that have the most check-ins on Sunday?
