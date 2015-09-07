@@ -40,6 +40,8 @@ The schema for our database is slightly different than the json format of the or
 
 1. Some of these queries may be very intellectually challenging! Be sure to use Google in an academically honest way if you ever get stuck.
 
+1. Dataset is a subset of the entire yelp database and is not holistically consistent - there may be numbers that don't add up among tables, and it's ok.
+
 ###Writing queries
 Now that we've explored the structure of our database, let's start writing queries! Please write your solution for each of the queries below in the `YelpQueries.java` file included in the hw1 directory. 
 For example, consider a hypothetical question 0: "What is the total number of reviews in our dataset?" It should look like this:
