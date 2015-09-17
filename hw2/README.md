@@ -143,7 +143,7 @@ The following Ant commands will be useful:
     $ ant test                        // run all tests
     $ ant runtest -Dtest=testname     // runs the test in /test/testnameTest.java
 
-We encourage you to write your own tests, as we have provided you with only a subset of what we will be grading with.  To add new test files, add `*Test.java` to the `test` folder, where `*` is the test name of your choice.
+We encourage you to write your own tests, as we have provided you with only a subset of what we will be grading with.  To add new test files, add `*Test.java` to the `test/simpledb` folder, where `*` is the test name of your choice.
 
 ## Autograder
 
