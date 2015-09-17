@@ -8,7 +8,11 @@ public class QueryPlans {
 	//SELECT * FROM T1, T2 WHERE T1.column0 = T2.column0;
 	public Operator queryOne(DbIterator t1, DbIterator t2) {
 		// IMPLEMENT ME
-		return null;
+		Predicate pred;
+		Filter op;
+		pred = new Predicate(0, Predicate.Op.EQUALS, t2.getTupleDesc().getField(0));
+		op = new Filter(pred, t1);
+		return op;
 	}
 
 	//SELECT * FROM T1, T2 WHERE T1. column0 > 1 AND T1.column1 = T2.column1;
