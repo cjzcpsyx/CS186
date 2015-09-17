@@ -44,7 +44,7 @@ Operators are used in SQL to specify conditions and conjoin multiple tables. The
 
 To start off, let's implement the Filter operator. After completing the methods in `Filter.java`, you should be passing the tests in `FilterTest.java`. You can run these tests with the command
 
-    $ ant runtest –Dtest=FilterTest
+    $ ant runtest -Dtest=FilterTest
 
 Tip: You may want to look at other classes that extend Operator to get a feel for how to implement this operator.
 
@@ -87,7 +87,7 @@ For this task, develop and write a query plan in `QueryPlans.java` for each of t
 
 At this point, you should be passing the tests in `QueriesTest.java`. You can run these tests with the command
 
-    $ ant runtest –Dtest=QueriesTest
+    $ ant runtest -Dtest=QueriesTest
 
 # Implementing Joins
 
@@ -101,7 +101,7 @@ We have provided skeleton code for your Chunk Nested Loop Join implementation in
 
 At this point, you should be passing the tests in `ChunkNestedLoopJoinTest.java`. You can run these tests with the command
 
-    $ ant runtest –Dtest=ChunkNestedLoopJoinTest
+    $ ant runtest -Dtest=ChunkNestedLoopJoinTest
 
 Tip: If you find yourself stuck, you may find `Join.java` to be a useful reference.
 
@@ -130,7 +130,7 @@ We have provided skeleton code for your Symmetric Hash Join implementation in `S
 
 At this point, you should be passing the tests in `SymmetricHashJoinTest.java`.  You can run these tests with the command
 
-    $ ant runtest –Dtest=SymmetricHashJoinTest
+    $ ant runtest -Dtest=SymmetricHashJoinTest
 
 # Wrapping Up
 
