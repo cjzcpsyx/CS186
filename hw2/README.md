@@ -60,14 +60,14 @@ For this task, develop and write a query plan in `QueryPlans.java` for each of t
 
     SELECT *
     FROM T1, T2
-    WHERE T1.column0 = T2.column;
+    WHERE T1.column0 = T2.column0;
     
 #### Query 2
 
     SELECT * 
     FROM T1, T2
     WHERE T1.column0 > 1
-      AND T1.column1 = T2.column2;
+      AND T1.column1 = T2.column1;
       
 #### Query 3
 
