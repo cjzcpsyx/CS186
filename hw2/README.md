@@ -151,7 +151,7 @@ We will set up an autograder for you to check your submissions.  More to come so
 
 ## Submission
 
-To submit your assignment, push a branch containing the commit you want us to grade to `release/hw2`.
+To submit your assignment, push a branch containing the commit you want us to grade to `release/hw2`.  If you are working with a partner, we will only grade the submission in Partner 1's repository, as designated on the Google Form.
 
     $ git add . // or git add <file>
     $ git commit -m "<message>"
