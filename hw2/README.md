@@ -44,7 +44,7 @@ Operators are used in SQL to specify conditions and conjoin multiple tables. The
 
 To start off, let's implement the Filter operator. After completing the methods in `Filter.java`, you should be passing the tests in `FilterTest.java`. You can run these tests with the command
 
-    $ ant runtest –Dtest=FilterTest
+    $ ant runtest -Dtest=FilterTest
 
 Tip: You may want to look at other classes that extend Operator to get a feel for how to implement this operator.
 
@@ -60,14 +60,14 @@ For this task, develop and write a query plan in `QueryPlans.java` for each of t
 
     SELECT *
     FROM T1, T2
-    WHERE T1.column0 = T2.column;
+    WHERE T1.column0 = T2.column0;
     
 #### Query 2
 
     SELECT * 
     FROM T1, T2
     WHERE T1.column0 > 1
-      AND T1.column1 = T2.column2;
+      AND T1.column1 = T2.column1;
       
 #### Query 3
 
@@ -87,7 +87,7 @@ For this task, develop and write a query plan in `QueryPlans.java` for each of t
 
 At this point, you should be passing the tests in `QueriesTest.java`. You can run these tests with the command
 
-    $ ant runtest –Dtest=QueriesTest
+    $ ant runtest -Dtest=QueriesTest
 
 # Implementing Joins
 
@@ -101,7 +101,7 @@ We have provided skeleton code for your Chunk Nested Loop Join implementation in
 
 At this point, you should be passing the tests in `ChunkNestedLoopJoinTest.java`. You can run these tests with the command
 
-    $ ant runtest –Dtest=ChunkNestedLoopJoinTest
+    $ ant runtest -Dtest=ChunkNestedLoopJoinTest
 
 Tip: If you find yourself stuck, you may find `Join.java` to be a useful reference.
 
@@ -130,7 +130,7 @@ We have provided skeleton code for your Symmetric Hash Join implementation in `S
 
 At this point, you should be passing the tests in `SymmetricHashJoinTest.java`.  You can run these tests with the command
 
-    $ ant runtest –Dtest=SymmetricHashJoinTest
+    $ ant runtest -Dtest=SymmetricHashJoinTest
 
 # Wrapping Up
 
@@ -143,7 +143,7 @@ The following Ant commands will be useful:
     $ ant test                        // run all tests
     $ ant runtest -Dtest=testname     // runs the test in /test/testnameTest.java
 
-We encourage you to write your own tests, as we have provided you with only a subset of what we will be grading with.  To add new test files, add `*Test.java` to the `test` folder, where `*` is the test name of your choice.
+We encourage you to write your own tests, as we have provided you with only a subset of what we will be grading with.  To add new test files, add `*Test.java` to the `test/simpledb` folder, where `*` is the test name of your choice.
 
 ## Autograder
 
@@ -151,7 +151,7 @@ We will set up an autograder for you to check your submissions.  More to come so
 
 ## Submission
 
-To submit your assignment, push a branch containing the commit you want us to grade to `release/hw2`.
+To submit your assignment, push a branch containing the commit you want us to grade to `release/hw2`.  If you are working with a partner, we will only grade the submission in Partner 1's repository, as designated on the Google Form.
 
     $ git add . // or git add <file>
     $ git commit -m "<message>"
