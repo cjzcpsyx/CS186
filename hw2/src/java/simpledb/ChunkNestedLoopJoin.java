@@ -12,6 +12,9 @@ public class ChunkNestedLoopJoin extends Operator {
     private DbIterator child1, child2;
     private TupleDesc comboTD;
     private int chunkSize;
+    private Chunk currentChunk;
+    private Tuple[] tupleArray;
+    private int chunkTupleIndex;
 
     /**
      * Constructor. Accepts to children to join and the predicate to join them
@@ -32,6 +35,8 @@ public class ChunkNestedLoopJoin extends Operator {
         this.child2 = child2;
         this.chunkSize = chunkSize;
         comboTD = TupleDesc.merge(child1.getTupleDesc(), child2.getTupleDesc());
+        this.currentChunk = new Chunk(chunkSize);
+        this.chunkTupleIndex = -1;
     }
 
     public JoinPredicate getJoinPredicate() {
@@ -48,6 +53,9 @@ public class ChunkNestedLoopJoin extends Operator {
     public void open() throws DbException, NoSuchElementException,
             TransactionAbortedException {
         // IMPLEMENT ME
+        child1.open();
+        child2.open();
+        super.open();
     }
 
     /**
@@ -55,6 +63,9 @@ public class ChunkNestedLoopJoin extends Operator {
      */
     public void close() {
         // IMPLEMENT ME
+        super.close();
+        child1.close();
+        child2.close();
     }
 
     public void rewind() throws DbException, TransactionAbortedException {
@@ -67,7 +78,7 @@ public class ChunkNestedLoopJoin extends Operator {
      */
     public Chunk getCurrentChunk() throws DbException, TransactionAbortedException {
         // IMPLEMENT ME
-        return null;
+        return currentChunk;
     }
  
     /**
@@ -75,7 +86,8 @@ public class ChunkNestedLoopJoin extends Operator {
      */
     protected Chunk fetchNextChunk() throws DbException, TransactionAbortedException {
         // IMPLEMENT ME
-        return null;
+        currentChunk.loadChunk(this.child1);
+        return currentChunk;
     }
 
     /**
@@ -96,6 +108,39 @@ public class ChunkNestedLoopJoin extends Operator {
      */
     protected Tuple fetchNext() throws TransactionAbortedException, DbException {
         // IMPLEMENT ME
+        if (this.chunkTupleIndex == -1) {
+            this.tupleArray = fetchNextChunk().getChunkTuples();
+            this.chunkTupleIndex = 0;
+        }
+
+        while (this.tupleArray != null && this.chunkTupleIndex < this.chunkSize) {
+            Tuple t1 = this.tupleArray[this.chunkTupleIndex];
+
+            while (t1 != null && child2.hasNext()) {
+                Tuple t2 = child2.next();
+
+                if (this.pred.filter(t1, t2)) {
+                    int td1n = t1.getTupleDesc().numFields();
+                    int td2n = t2.getTupleDesc().numFields();
+
+                    Tuple t = new Tuple(comboTD);
+                    for (int i = 0; i < td1n; i++)
+                        t.setField(i, t1.getField(i));
+                    for (int i = 0; i < td2n; i++)
+                        t.setField(td1n + i, t2.getField(i));
+                    return t;
+                }
+            }
+
+            child2.rewind();
+            this.chunkTupleIndex++;
+
+            if (this.chunkTupleIndex == this.chunkSize) {
+                this.tupleArray = fetchNextChunk().getChunkTuples();
+                this.chunkTupleIndex = 0;
+            }
+        }
+
         return null;
     }
 

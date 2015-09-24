@@ -18,6 +18,8 @@ public class Chunk {
      */
     public Chunk(int chunkSize) {
         // IMPLEMENT ME
+        this.chunkSize = chunkSize;
+        this.tupleArray = new Tuple[chunkSize];
     }
 
     /**
@@ -27,6 +29,19 @@ public class Chunk {
      */
     public void loadChunk(DbIterator iterator) throws DbException, TransactionAbortedException {
         // IMPLEMENT ME
+        if (iterator.hasNext()) {
+            for (int i=0; i<this.chunkSize; i++) {
+                if (iterator.hasNext()) {
+                    this.tupleArray[i] = iterator.next();
+                }
+                else {
+                    this.tupleArray[i] = null;
+                }
+            }
+        }
+        else {
+            this.tupleArray = null;
+        }
     }
 
     /**
@@ -34,7 +49,7 @@ public class Chunk {
      */
     public Tuple[] getChunkTuples() {
         // IMPLEMENT ME
-        return null;
+        return this.tupleArray;
     }
 
 }
