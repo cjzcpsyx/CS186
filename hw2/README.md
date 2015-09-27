@@ -147,7 +147,7 @@ We encourage you to write your own tests, as we have provided you with only a su
 
 ## Autograder
 
-If you have correctly submitted your homework to the release/hw2 branch, you will receive emails from Jenkins with your test output.  We are manually triggering the autograder, so the response time will not be immediate.
+If you have correctly submitted your homework to the release/hw2 branch, you will receive emails from Jenkins with your test output.  The autograder will trigger once you push to Github.
 
 The autograder runs the provided tests on the instructional machine, with the five *.java files you are supposed to modify.
 
