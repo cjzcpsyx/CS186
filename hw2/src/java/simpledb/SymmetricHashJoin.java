@@ -12,6 +12,10 @@ public class SymmetricHashJoin extends Operator {
 
     private HashMap<Object, ArrayList<Tuple>> leftMap = new HashMap<Object, ArrayList<Tuple>>();
     private HashMap<Object, ArrayList<Tuple>> rightMap = new HashMap<Object, ArrayList<Tuple>>();
+    private DbIterator currentIterator;
+    private int currentIndex;
+    private ArrayList<Tuple> currentMatches;
+    private Tuple currentTuple;
 
      /**
      * Constructor. Accepts children to join and the predicate to join them on.
@@ -28,6 +32,9 @@ public class SymmetricHashJoin extends Operator {
         this.child1 = child1;
         this.child2 = child2;
         comboTD = TupleDesc.merge(child1.getTupleDesc(), child2.getTupleDesc());
+        this.currentIterator = child1;
+        this.currentIndex = -1;
+        this.currentTuple = null;
     }
 
     public TupleDesc getTupleDesc() {
@@ -40,6 +47,9 @@ public class SymmetricHashJoin extends Operator {
     public void open() throws DbException, NoSuchElementException,
             TransactionAbortedException {
         // IMPLEMENT ME
+        child1.open();
+        child2.open();
+        super.open();
     }
 
     /**
@@ -47,6 +57,9 @@ public class SymmetricHashJoin extends Operator {
      */
     public void close() {
         // IMPLEMENT ME
+        super.close();
+        child1.close();
+        child2.close();
     }
 
     /**
@@ -74,7 +87,82 @@ public class SymmetricHashJoin extends Operator {
      */
     protected Tuple fetchNext() throws TransactionAbortedException, DbException {
         // IMPLEMENT ME
+        Tuple t;
+        Field f;
+        int field;
+
+        if (currentIndex != -1) {
+            this.currentIndex++;
+            if (this.currentIndex<this.currentMatches.size()) {
+                if (this.currentIterator == this.child1) {
+                    return joinTuple(this.currentTuple, this.currentMatches.get(currentIndex));
+                }
+                else {
+                    return joinTuple(this.currentMatches.get(currentIndex), this.currentTuple);
+                }
+            }
+        }
+
+        while (this.child1.hasNext() || this.child2.hasNext()) {
+           if (this.currentIterator.hasNext()) {
+                // child1 as inner
+                if (this.currentIterator == this.child1) {
+                    t =  this.currentIterator.next();
+                    field = this.pred.getField1();
+                    f = t.getField(field);
+
+                    putInHashMap(t, f, leftMap);
+                    if (rightMap.containsKey(f)) {
+                        this.currentTuple = t;
+                        this.currentMatches = rightMap.get(f);
+                        this.currentIndex = 0;
+                        return joinTuple(this.currentTuple, this.currentMatches.get(currentIndex));
+                    }
+                }
+                // child2 as inner
+                else {
+                    t =  this.currentIterator.next();
+                    field = this.pred.getField2();
+                    f = t.getField(field);
+
+                    putInHashMap(t, f, rightMap);
+                    if (leftMap.containsKey(f)) {
+                        this.currentTuple = t;
+                        this.currentMatches = leftMap.get(f);
+                        this.currentIndex = 0;
+                        return joinTuple(this.currentMatches.get(currentIndex), this.currentTuple);
+                    }
+                } 
+            }
+            switchRelations();
+        }
+
         return null;
+    }
+
+    private void putInHashMap(Tuple t, Field f, HashMap<Object, ArrayList<Tuple>> hashMap) throws TransactionAbortedException, DbException {
+        ArrayList<Tuple> arrayList;
+
+        if (hashMap.containsKey(f)) {
+            arrayList = hashMap.get(f);
+        }
+        else {
+            arrayList = new ArrayList<Tuple>();
+        }
+        arrayList.add(t);
+        hashMap.put(f, arrayList);
+    }
+
+    private Tuple joinTuple(Tuple t1, Tuple t2) throws TransactionAbortedException, DbException {
+        int td1n = t1.getTupleDesc().numFields();
+        int td2n = t2.getTupleDesc().numFields();
+
+        Tuple t = new Tuple(comboTD);
+        for (int i = 0; i < td1n; i++)
+            t.setField(i, t1.getField(i));
+        for (int i = 0; i < td2n; i++)
+            t.setField(td1n + i, t2.getField(i));
+        return t;
     }
 
     /**
@@ -82,6 +170,14 @@ public class SymmetricHashJoin extends Operator {
      */
     private void switchRelations() throws TransactionAbortedException, DbException {
         // IMPLEMENT ME
+        if (this.currentIterator == this.child1) {
+            this.currentIterator = this.child2;
+        }
+        else {
+            this.currentIterator = child1;
+        }
+        this.currentIndex = -1;
+        this.currentTuple = null;
     }
 
     @Override
