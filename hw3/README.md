@@ -10,7 +10,7 @@ Lastly, there is a lot of code in this directory. Please look [here](https://git
 
 1. [Implement disk hash-partitioning](https://github.com/berkeley-cs186/course/tree/master/hw3#disk-hash-partitioning)
 2. [Implement in-memory UDF caching](https://github.com/berkeley-cs186/course/tree/master/hw3#in-memory-udf-caching)
-3. [Implement hash-partitioned UDF caching](https://github.com/berkeley-cs186/course/tree/master/hw2#disk-partitioned-udf-caching)
+3. [Implement hash-partitioned UDF caching](https://github.com/berkeley-cs186/course/tree/master/hw3#disk-partitioned-udf-caching)
 
 # Spark
 
@@ -182,7 +182,7 @@ At this point, you should be passing all the tests in `DiskHashedRelationSuite.s
 
 ## In-Memory UDF Caching
 
-In this section, we will be dealing with `case class CacheProject` in `basicOperators.scala`. You might notice that there are only 4 lines of code in this class and, more importantly, no `// IMPLEMENT ME`s. You don't actually have to write any code here. However, if you trace the function call in [line 66](https://github.com/berkeley-cs186/course/blob/master/hw2/sql/core/src/main/scala/org/apache/spark/sql/execution/basicOperators.scala#L66), you will find that there are two parts of this stack you must implement in order to have a functional in-memory UDF implementation. 
+In this section, we will be dealing with `case class CacheProject` in `basicOperators.scala`. You might notice that there are only 4 lines of code in this class and, more importantly, no `// IMPLEMENT ME`s. You don't actually have to write any code here. However, if you trace the function call in [line 66](https://github.com/berkeley-cs186/course/blob/master/hw3/sql/core/src/main/scala/org/apache/spark/sql/execution/basicOperators.scala#L66), you will find that there are two parts of this stack you must implement in order to have a functional in-memory UDF implementation. 
 
 ### Task #3: Implementing `CS186Utils` methods
 
