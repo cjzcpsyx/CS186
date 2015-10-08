@@ -217,7 +217,12 @@ In order to run our tests, we have provided a simple Makefile. In order to run t
 
 ### Assignment autograder
 
-**Will be posted soon!**
+We will provide an autograder on this assignment. To run the autograder on your assignment, you must push to your submission branch: `release/hw3` (this ensures that you're submitting the assignment correctly in addition to getting an autograder email).
+
+    $ git checkout -b release/hw3
+    $ git push origin release/hw3
+
+Our machines will e-mail you the results of the autograder within an hour. If you do not receive a response after an hour, please *first* double-check that all your files are in the right place and that you pushed a commit to your release branch, and *then* notify us that you haven't received a response. **Note that these tests are the same as the ones we've provided for you and are not comprehensive!**
 
 ### Assignment submission
 
