@@ -9,11 +9,13 @@ import scala.collection.mutable.ArraySeq
 import scala.util.Random
 
 case class Student(sid: Int, gpa: Float)
+case class TestTable(field1: Int, field2: String, field3: Float)
 
 class CS186UtilsSuite extends FunSuite {
   val numberGenerator: Random = new Random()
 
   val studentAttributes: Seq[Attribute] =  ScalaReflection.attributesFor[Student]
+  val testAttributes: Seq[Attribute] =  ScalaReflection.attributesFor[TestTable]
 
   // TESTS FOR TASK #3
   /* NOTE: This test is not a guarantee that your caching iterator is completely correct.
@@ -43,5 +45,14 @@ class CS186UtilsSuite extends FunSuite {
     val attributes: Seq[Expression] = Seq() ++ studentAttributes ++ Seq(udf)
 
     assert(CS186Utils.getUdfFromExpressions(attributes) == udf)
+  }
+
+  test("sequence with multiple UDFs") {
+    val udf1: ScalaUdf = new ScalaUdf((i: Int) => i + 1, IntegerType, Seq(testAttributes(0)))
+    val udf2: ScalaUdf = new ScalaUdf((i: Int) => i + 1, IntegerType, Seq(testAttributes(1)))
+    val udf3: ScalaUdf = new ScalaUdf((i: Int) => i + 1, IntegerType, Seq(testAttributes(2)))
+    val attributes: Seq[Expression] = Seq() ++ testAttributes ++ Seq(udf1) ++ Seq(udf2) ++ Seq(udf3)
+
+    assert(CS186Utils.getUdfFromExpressions(attributes) == udf3)
   }
 }
