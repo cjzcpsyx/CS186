@@ -37,11 +37,14 @@ protected [sql] final class GeneralDiskHashedRelation(partitions: Array[DiskPart
 
   override def getIterator() = {
     // IMPLEMENT ME
-    null
+    partitions.iterator
   }
 
   override def closeAllPartitions() = {
     // IMPLEMENT ME
+    for (partition <- partitions) {
+      partition.closePartition()
+    }
   }
 }
 
@@ -64,6 +67,15 @@ private[sql] class DiskPartition (
    */
   def insert(row: Row) = {
     // IMPLEMENT ME
+    if (inputClosed) {
+      throw new SparkException("input closed")
+    }
+    data.add(row)
+    writtenToDisk = false
+    if (measurePartitionSize() > blockSize) {
+      spillPartitionToDisk()
+      data.clear()
+    }
   }
 
   /**
@@ -107,12 +119,25 @@ private[sql] class DiskPartition (
 
       override def next() = {
         // IMPLEMENT ME
-        null
+        if (currentIterator.hasNext) {
+          currentIterator.next()
+        }
+        else if (chunkSizeIterator.hasNext) {
+          if (fetchNextChunk()) {
+            currentIterator.next()
+          }
+          else {
+            null
+          }
+        }
+        else {
+          null
+        }
       }
 
       override def hasNext() = {
         // IMPLEMENT ME
-        false
+        currentIterator.hasNext || chunkSizeIterator.hasNext
       }
 
       /**
@@ -123,7 +148,14 @@ private[sql] class DiskPartition (
        */
       private[this] def fetchNextChunk(): Boolean = {
         // IMPLEMENT ME
-        false
+        if (chunkSizeIterator.hasNext) {
+          byteArray = CS186Utils.getNextChunkBytes(inStream, chunkSizeIterator.next(), byteArray)
+          currentIterator = CS186Utils.getListFromBytes(byteArray).iterator.asScala
+          return true
+        }
+        else {
+          return false
+        }
       }
     }
   }
@@ -137,6 +169,10 @@ private[sql] class DiskPartition (
    */
   def closeInput() = {
     // IMPLEMENT ME
+    spillPartitionToDisk()
+    data.clear()
+    outStream.flush()
+    outStream.close()
     inputClosed = true
   }
 
@@ -174,6 +210,23 @@ private[sql] object DiskHashedRelation {
                 size: Int = 64,
                 blockSize: Int = 64000) = {
     // IMPLEMENT ME
-    null
+    if (input.hasNext) {
+      var row: Row = null
+      val partitions: Array[DiskPartition] = new Array[DiskPartition](size)
+      for (i <- 0 to size-1) {
+        partitions(i) = new DiskPartition(i.toString, blockSize)
+      }
+      while (input.hasNext) {
+        row = input.next()
+        partitions(keyGenerator.apply(row).hashCode % size).insert(row)
+      }
+      for (i <- 0 to size-1) {
+        partitions(i).closeInput()
+      }
+      new GeneralDiskHashedRelation(partitions)
+    }
+    else {
+      new GeneralDiskHashedRelation(new Array[DiskPartition](0))
+    }
   }
 }
