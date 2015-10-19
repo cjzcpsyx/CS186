@@ -226,7 +226,7 @@ Our machines will e-mail you the results of the autograder within an hour. If yo
 
 ### Assignment submission
 
-To submit your assignment, as before, push a branch containing the commit you want us to grade to `release/hw3`. This is separate from the autograder; pushing a commit here will not trigger the autograder, and vice-versa. **Finally, remember that copying all or part of another person's work, or using reference material not specifically allowed, are forms of cheating and will not be tolerated.**
+To submit your assignment, as before, push a branch containing the commit you want us to grade to `release/hw3`. **Finally, remember that copying all or part of another person's work, or using reference material not specifically allowed, are forms of cheating and will not be tolerated.**
 
 ### Credits and Acknowledgements
 Special thanks to Vikram Sreekanti!
