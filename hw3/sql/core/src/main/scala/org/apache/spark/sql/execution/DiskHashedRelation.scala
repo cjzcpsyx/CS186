@@ -169,8 +169,10 @@ private[sql] class DiskPartition (
    */
   def closeInput() = {
     // IMPLEMENT ME
-    spillPartitionToDisk()
-    data.clear()
+    if (data.size() > 0) {
+      spillPartitionToDisk()
+      data.clear()
+    }
     outStream.flush()
     outStream.close()
     inputClosed = true

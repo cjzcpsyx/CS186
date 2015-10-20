@@ -33,4 +33,30 @@ class DiskPartitionSuite extends FunSuite {
       partition.insert(Row(1))
     }
   }
+
+  test ("disk partition with block size = 20") {
+    val partition: DiskPartition = new DiskPartition("disk partition test", 20)
+
+    for (i <- 1 to 500) {
+      partition.insert(Row(i))
+    }
+
+    partition.closeInput()
+
+    val data: Array[Row] = partition.getData.toArray
+    (1 to 500).foreach((x: Int) => assert(data.contains(Row(x))))
+  }
+
+  test ("disk partition with block size = 37") {
+    val partition: DiskPartition = new DiskPartition("disk partition test", 37)
+
+    for (i <- 1 to 500) {
+      partition.insert(Row(i))
+    }
+
+    partition.closeInput()
+
+    val data: Array[Row] = partition.getData.toArray
+    (1 to 500).foreach((x: Int) => assert(data.contains(Row(x))))
+  }
 }

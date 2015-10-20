@@ -35,4 +35,34 @@ class DiskHashedRelationSuite extends FunSuite {
 
     hashedRelation.closeAllPartitions()
   }
+
+  test ("close partitions") {
+    val data: Array[Row] = (0 to 100).map(i => Row(i)).toArray
+    val hashedRelation: DiskHashedRelation = DiskHashedRelation(data.iterator, keyGenerator, 3, 64000)
+    var count: Int = 0
+
+    for (partition <- hashedRelation.getIterator()) {
+      for (row <- partition.getData()) {
+        assert(row.hashCode() % 3 == count)
+      }
+      count += 1
+    }
+
+    hashedRelation.closeAllPartitions()
+  }
+
+  test ("DiskHashedRelation with size = 5, block size = 20") {
+    val data: Array[Row] = (0 to 500).map(i => Row(i)).toArray
+    val hashedRelation: DiskHashedRelation = DiskHashedRelation(data.iterator, keyGenerator, 5, 20)
+    var count: Int = 0
+
+    for (partition <- hashedRelation.getIterator()) {
+      for (row <- partition.getData()) {
+        assert(row.hashCode() % 5 == count)
+      }
+      count += 1
+    }
+
+    hashedRelation.closeAllPartitions()
+  }
 }
