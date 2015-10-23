@@ -45,7 +45,6 @@ public class IntHistogram {
      * @param v Value to add to the histogram
      */
     public void addValue(int v) {
-        // TODO: some code goes here
         counts[bucketIndex(v)]++;
         numTuples++;
     }
