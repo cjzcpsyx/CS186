@@ -110,6 +110,8 @@ To estimate the selectivity of a predicate, refer to the following formulas. The
   - `col1 = col2` : `RF = 1/MAX(NDistinct(T1), NDistinct(T2))`
   - `col > value` : `RF = (High(T)-value)/(High(T)-Low(T))`
 
+One important question is how to calculate `NDistinct(T)`. One possibility is using a set, but that takes `O(n)` memory in the worse case, which we cannot afford. Thus, we've provided one solution, which is to use a constant size hash map to *approximate* the number of distinct tuples (feel free to peruse `IntStatistics` if you're interested). But since this is an approximation, `numDistinct` that we've calculated [here](https://github.com/berkeley-cs186/course/blob/master/hw4/src/java/simpledb/IntStatistics.java#L59) will not be exact.
+
 ### Exercise 1: IntStatistics.java
 
 You will need to implement some way to record table statistics for selectivity estimation. We have provided a skeleton
