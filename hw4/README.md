@@ -10,8 +10,8 @@ In this project, you will implement a query optimizer on top of SimpleDB. The ma
 selectivity estimation framework and a cost-based optimizer based on the Selinger cost-based optimizer discussed in class. The remainder of this document describes what is involved in adding optimizer support and provides a basic outline of how you can add this support to your database. As with the previous projects, we recommend that you start as early as possible.
 
 ## 0. A few notes
-- SimpleDB is, unfortunately, not simple. A big part of this project is to be able to read javadoc and source code, and
- to be able to understand not only the parts you need to implement, but also already implemented classes and methods.
+- SimpleDB is, unfortunately, not simple. A big part of this project is to be able to read javadoc and source code, and to be able to understand not only the parts you need to implement, but also already implemented classes and methods.
+  - However, **PLEASE DO NOT** change any of the interfaces and classes given unless we specify for you to do so! If you do change an external file, then you may pass the local tests, but **you will fail** our autograder!
 - If there's anything that doesn't make sense (anything, from tests cases to method descriptions), try to first *guess*
 what's going on, and if things still don't make sense, post what you think is happening and what's going wrong on
 Piazza. Tag your questions like "[HW4 P1]" for this homework's "Exercise 1"
