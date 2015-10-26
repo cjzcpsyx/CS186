@@ -253,7 +253,7 @@ includes the cost, cardinality, and best join ordering (as a vector). `computeCo
 if no plan can be found (because, for example, there is no linear join that is possible), or if the cost of all plans
 is greater than the `bestCostSoFar` argument. The method uses a cache of previous joins called `pc` (`optjoin` in the 
 pseudocode above) to quickly lookup the fastest way to join `joinSet - {joinToRemove}`. The other arguments (`stats`
-and `filterSelectivities`) are passed into the `orderJoins` method that you must implement as a part of Exercise 3, 
+and `filterSelectivities`) are passed into the `orderDynamicProgrammingJoins` method that you must implement as a part of Exercise 4, 
 and are explained below. This method essentially performs lines 6-8 of the psuedocode described earlier.
 
 Third, we have provided a class `PlanCache` that can be used to cache the best way to join a subset of the joins 
@@ -264,8 +264,8 @@ considered so far in your implementation of the Selinger-style optimizer (an ins
 
 In `JoinOptimizer.java`, implement the method:
 
-    Vector orderJoins(HashMap<String, TableStats> stats, 
-                      HashMap<String, Double> filterSelectivities)
+    Vector orderDynamicProgrammingJoins(HashMap<String, TableStats> stats, 
+                                        HashMap<String, Double> filterSelectivities)
 
 This method should operate on the `joins` class member, returning a new `Vector` that specifies the order in which 
 joins should be done. Item `0` of this vector indicates the bottom-most join in a linear plan. Adjacent joins in the 
