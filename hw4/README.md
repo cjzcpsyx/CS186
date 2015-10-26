@@ -235,7 +235,7 @@ Translating the algorithm to the join node list form mentioned above, an outline
 
 To help you implement this algorithm, we have provided several classes and methods to assist you. First, the method
 `enumerateSubsets(Vector v, int size)` in `JoinOptimizer.java` will return a set of all of the subsets of `v` of size 
-size. This method is not particularly efficient; you can try to implement a more efficient enumerator by yourself, but
+`size`. This method is not particularly efficient; you can try to implement a more efficient enumerator by yourself, but
 it's not necessary for this project.
 
 Second, we have provided the method:
@@ -252,7 +252,7 @@ way to join `joinToRemove` to `joinSet - {joinToRemove}`. It returns this best m
 includes the cost, cardinality, and best join ordering (as a vector). `computeCostAndCardOfSubplan` may return `null`,
 if no plan can be found (because, for example, there is no linear join that is possible), or if the cost of all plans
 is greater than the `bestCostSoFar` argument. The method uses a cache of previous joins called `pc` (`optjoin` in the 
-psuedocode above) to quickly lookup the fastest way to join `joinSet - {joinToRemove}`. The other arguments (`stats`
+pseudocode above) to quickly lookup the fastest way to join `joinSet - {joinToRemove}`. The other arguments (`stats`
 and `filterSelectivities`) are passed into the `orderJoins` method that you must implement as a part of Exercise 3, 
 and are explained below. This method essentially performs lines 6-8 of the psuedocode described earlier.
 
