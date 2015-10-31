@@ -11,6 +11,8 @@ public class IntStatistics {
     private final boolean[] distinctInts;
 
     // TODO: IMPLEMENT ME
+    private Integer high;
+    private Integer low;
 
     /**
      * Create a new IntStatistic.
@@ -25,6 +27,8 @@ public class IntStatistics {
         distinctInts = new boolean[bins];
 
         // TODO: IMPLEMENT ME
+        high = null;
+        low = null;
     }
 
     /**
@@ -33,6 +37,13 @@ public class IntStatistics {
      */
     public void addValue(int v) {
         // TODO: IMPLEMENT ME
+        if (high == null || high < v) {
+            high = v;
+        }
+
+        if (low == null || low > v) {
+            low = v;
+        }
 
         // hashes the value and keeps an estimate to the number of distinct tuples we've seen
         int index = (hashCode(v) % distinctInts.length + distinctInts.length) % distinctInts.length;
@@ -59,6 +70,37 @@ public class IntStatistics {
         double numDistinct = ((double) numTuples) * numDistinctTuples / distinctInts.length;
 
         // TODO: IMPLEMENT ME
+        switch (op) {
+        case EQUALS:
+            if (v > high || v < low) {
+                return 0;
+            }
+            return (float)1 / numDistinct;
+        case NOT_EQUALS:
+            return 1 - estimateSelectivity(Predicate.Op.EQUALS, v);
+        case GREATER_THAN:
+            if (v < low) {
+                return 1;
+            }
+            if (v > high) {
+                return 0;
+            }
+            return (float)(high - v) / (high - low);
+        case GREATER_THAN_OR_EQ:
+            return 1 - estimateSelectivity(Predicate.Op.LESS_THAN, v);
+        case LESS_THAN:
+            if (v < low) {
+                return 0;
+            }
+            if (v > high) {
+                return 1;
+            }
+            return (float)(v - low) / (high - low);
+        case LESS_THAN_OR_EQ:
+            return 1 - estimateSelectivity(Predicate.Op.GREATER_THAN, v);
+        case LIKE:
+            return estimateSelectivity(Predicate.Op.EQUALS, v);
+        }
         return -1.0;
     }
 
