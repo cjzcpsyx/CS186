@@ -64,6 +64,7 @@ public class TableStats {
     private int numPages, numTuples;
 
     // TODO: add any fields that you may need
+    private ArrayList<Object> statistics;
 
     /**
      * Create a new TableStats object, that keeps track of statistics on each
@@ -92,6 +93,15 @@ public class TableStats {
         int numFields = tupleDesc.numFields();
 
         // TODO: what goes here?
+        statistics = new ArrayList<Object>();
+
+        for (int i = 0; i < numFields; i++) {
+            if (Type.INT_TYPE.equals(tupleDesc.getFieldType(i))) {
+                statistics.add(new IntStatistics(NUM_HIST_BINS));
+            } else {
+                statistics.add(new StringHistogram(NUM_HIST_BINS));
+            }
+        }
 
         final DbFileIterator iter = file.iterator(null);
         try {
@@ -102,6 +112,13 @@ public class TableStats {
                 numTuples++;
 
                 // TODO: and here?
+                for (int i = 0; i < numFields; i++) {
+                    if (Type.INT_TYPE.equals(tupleDesc.getFieldType(i))) {
+                        ((IntStatistics)statistics.get(i)).addValue(((IntField)t.getField(i)).getValue());
+                    } else {
+                        ((StringHistogram)statistics.get(i)).addValue(((StringField)t.getField(i)).getValue());
+                    }
+                }
             }
             iter.close();
         } catch (DbException e) {
@@ -125,7 +142,7 @@ public class TableStats {
      */
     public double estimateScanCost() {
         // TODO: some code goes here
-        return 0;
+        return numTuples * ioCostPerPage;
     }
 
     /**
@@ -139,7 +156,7 @@ public class TableStats {
      */
     public int estimateTableCardinality(double selectivityFactor) {
         // TODO: some code goes here
-        return 0;
+        return (int)(numTuples * selectivityFactor);
     }
 
     /**
@@ -157,7 +174,11 @@ public class TableStats {
      */
     public double estimateSelectivity(int field, Predicate.Op op, Field constant) {
         // TODO: some code goes here
-        return 0;
+        if (Type.INT_TYPE.equals(tupleDesc.getFieldType(field))) {
+            return ((IntStatistics)statistics.get(field)).estimateSelectivity(op, ((IntField)constant).getValue());
+        } else {
+            return ((StringHistogram)statistics.get(field)).estimateSelectivity(op, ((StringField)constant).getValue());
+        }
     }
 
     /**

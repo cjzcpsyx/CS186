@@ -75,7 +75,7 @@ public class IntStatistics {
             if (v > high || v < low) {
                 return 0;
             }
-            return (float)1 / numDistinct;
+            return (double)1 / numDistinct;
         case NOT_EQUALS:
             return 1 - estimateSelectivity(Predicate.Op.EQUALS, v);
         case GREATER_THAN:
@@ -85,7 +85,7 @@ public class IntStatistics {
             if (v > high) {
                 return 0;
             }
-            return (float)(high - v) / (high - low);
+            return (double)(high - v) / (high - low);
         case GREATER_THAN_OR_EQ:
             return 1 - estimateSelectivity(Predicate.Op.LESS_THAN, v);
         case LESS_THAN:
@@ -95,7 +95,7 @@ public class IntStatistics {
             if (v > high) {
                 return 1;
             }
-            return (float)(v - low) / (high - low);
+            return (double)(v - low) / (high - low);
         case LESS_THAN_OR_EQ:
             return 1 - estimateSelectivity(Predicate.Op.GREATER_THAN, v);
         case LIKE:
