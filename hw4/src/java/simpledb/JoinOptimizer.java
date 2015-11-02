@@ -109,8 +109,7 @@ public class JoinOptimizer {
         } else {
 
             // TODO: IMPLEMENT ME
-
-            return -1.0;
+            return cost1 + card1 * cost2 + card1 * card2;
         }
     }
 
@@ -157,6 +156,18 @@ public class JoinOptimizer {
         int card = 1;
 
         // TODO: IMPLEMENT ME
+        if (joinOp == Predicate.Op.EQUALS) {
+            if (t1pkey) {
+                card = card2;
+            }
+            else if (t2pkey) {
+                 card = card1;
+            } else {
+                card = Math.max(card1, card2);
+            }
+        } else {
+            card = (int)(0.3 * card1 * card2);
+        }
 
         return card <= 0 ? 1 : card;
     }
