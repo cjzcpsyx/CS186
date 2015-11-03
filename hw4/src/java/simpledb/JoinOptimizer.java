@@ -226,6 +226,26 @@ public class JoinOptimizer {
         Vector<Double> planCosts = new Vector<>();
 
         // TODO: IMPLEMENT ME
+        Set<LogicalJoinNode> joinsLeft = new HashSet<LogicalJoinNode>(joins);
+
+        // continue until we've processed all joins
+        while (joinsLeft.size() > 0) {
+            LogicalJoinNode cheapestJoin = (LogicalJoinNode)joinsLeft.toArray()[0];
+            CostCard miniCost  = new CostCard();
+            miniCost.cost = Double.MAX_VALUE;
+            // find minimun cost join
+            for (LogicalJoinNode j : joinsLeft) {
+                CostCard temp = costGreedyJoin(j, plan, planCardinalities, planCosts, stats, filterSelectivities);
+                if (temp.cost < miniCost.cost) {
+                    miniCost = temp;
+                    cheapestJoin = j;
+                }
+            }
+            plan.add(cheapestJoin);
+            joinsLeft.remove(cheapestJoin);
+            planCardinalities.add(miniCost.card);
+            planCosts.add(miniCost.cost);
+        }
 
         return plan;
     }
