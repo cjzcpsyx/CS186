@@ -105,7 +105,7 @@ public class DpJoinTest {
         // There are only three join nodes; if you're only re-ordering the join
         // nodes,
         // you shouldn't end up with more than you started with
-        Assert.assertEquals(result.size(), nodes.size());
+        Assert.assertEquals(nodes.size(), result.size());
 
         // There were a number of ways to do the query in this quiz, reasonably
         // well;
