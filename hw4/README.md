@@ -272,8 +272,7 @@ joins should be done. Item `0` of this vector indicates the bottom-most join in 
 returned vector should share at least one field to ensure the plan is linear. Here stats is an object that lets you
 find the `TableStats` for a given table name that appears in the `FROM` list of the query. `filterSelectivities` allows
 you to find the selectivity of any predicates over a table; it is guaranteed to have one entry per table name in the
-`FROM` list. Finally, explain specifies that you should output a representation of the join order for informational
-purposes.
+`FROM` list.
 
 You may wish to use the helper methods and classes described above to assist in your implementation. Roughly, your
 implementation should follow the pseudocode above, looping through subset sizes, subsets, and sub-plans of subsets,
