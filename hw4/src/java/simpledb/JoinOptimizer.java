@@ -272,12 +272,11 @@ public class JoinOptimizer {
             Set<Set<LogicalJoinNode>> subset = enumerateSubsets(joins, i);
             // loop through subsets
             for (Set<LogicalJoinNode> s : subset) {
-                Set<Set<LogicalJoinNode>> subset2 = enumerateSubsets(new Vector<LogicalJoinNode>(s), 1);
                 CostCard bestPlan = new CostCard();
                 bestPlan.cost = Double.MAX_VALUE;
                 // loop through sub-plans
-                for (Set<LogicalJoinNode> s2 : subset2) {
-                    CostCard temp = computeCostAndCardOfSubplan(stats, filterSelectivities, (LogicalJoinNode)s2.toArray()[0], s, bestPlan.cost, pc);
+                for (LogicalJoinNode s2 : s) {
+                    CostCard temp = computeCostAndCardOfSubplan(stats, filterSelectivities, s2, s, bestPlan.cost, pc);
                     if (temp != null) {
                         bestPlan = temp;
                     }
