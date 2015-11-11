@@ -1,6 +1,16 @@
 /*Warmup problems */
 
-/*Part 1: insert entries*/
+/*Your first Transaction*/
+
+set transaction read write;
+
+
+/*Code goes here*/
+
+
+commit;
+
+/*Update, Insert, Delete: Part 1: insert entries*/
 set transaction read write;
 
 
