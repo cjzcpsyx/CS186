@@ -1,0 +1,2 @@
+data (f1 int, f2 int)
+s (sid int, age int, name string)
