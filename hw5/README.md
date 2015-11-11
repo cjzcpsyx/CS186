@@ -18,7 +18,7 @@ You can start up a SimpleDB interactive console by running the following command
 1. After compiling with `ant`, run the following two commands once:
   1. `java -jar dist/simpledb.jar convert data/data.txt 2 "int,int"`
   2. `java -jar dist/simpledb.jar convert data/s.txt 3 "int,int,string"`
-2. `java -jar dist/simpledb.jar parser data/catalog.txt -f queryFile.sql`
+2. Every time you want to run an interactive session with the data saved, use the following command: `java -jar dist/simpledb.jar parser data/catalog.txt`
 
 The data will be stored in `data/*.dat` files, though you should not need to worry about this.
 
