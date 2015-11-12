@@ -228,7 +228,6 @@ public class BufferPool {
         Iterator<PageId> i = pages.keySet().iterator();
         while(i.hasNext())
             flushPage(i.next());
-
     }
 
     /**
@@ -278,6 +277,7 @@ public class BufferPool {
 
         file.writePage(p);
         p.markDirty(false, null);
+        pages.remove(pid);
     }
 
     /**
