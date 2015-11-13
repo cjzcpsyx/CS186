@@ -89,7 +89,7 @@ After completing this exercise, you should be able to pass the TestAbort and Tes
 
 - Likewise, you may be interested in looking at the functions `LogFile.java` has for generating and appending log records, such as `logAbort`, `logCommit`, and `logWrite`. Note that not all logs are the same length.
 
-- After you are done with rollback, make sure that your `raf` file pointer is at the beginning of the last complete log record.
+- After you are done with rollback, make sure that your `raf` file pointer is at the end of the last complete log record, `currentOffset`.
 
 
 ### Exercise 3: LogFile.recover()
