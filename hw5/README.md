@@ -30,20 +30,20 @@ Transactions, as seen in class, can have multiple operations within them. For th
 1. List all name, age tuples in `s`.
 2. List all elements in data.
 
-Follow the instructions in the SQL file for your first transaction. 
+Put these queries under "Your First Transaction" in the SQL file.
 
 ### Exercise 1.2: Update, Insert, Delete
 
-While we have already written queries to read from the database, we have not explored writing to the database. Add the following operations to `queryFile.sql`:
+While we have already written queries to read from the database, we have not explored writing to the database. Add the following operations to `queryFile.sql`, with each part as separate transactions:
 
-1. First transaction:
+1. Part 1:
   1. Insert these tuples into `data`: (6, 60), (10, 33).
   2. Insert these tuples into `s`: (6, 6, 'Michael'), (7, 60, 'Michelle').
-2. Second Transaction:
+2. Part 2:
   1. Update all entries in `data` that have an `f1` value of 1 to have an `f2` value of 1.
   2. Update all entries in `s` with the name "Michelle" to have an age of 100.
   3. Update all entries in`data` that have an `f2` value of 50 to have an `f2` value of 100.
-3. Third Transaction:
+3. Part 3:
   1. Delete all entries in `data` with an `f1` value of 2.
   2. Delete all entries in `s`.
 
@@ -59,6 +59,7 @@ Now that you are familiar with .sql files, you can test some additional testing 
 rollback;       // aborts an ongoing transaction and undos the changes
 ### checkpoint; // force a checkpoint in the log
 ### crash;      // crashes and restarts the database, then recovers
+### printlog;   // prints the current state of the log record
 ```
 
 We've provided a scaffold for you in `queryTest.sql`, which we won't grade - go ahead and write some SQL code to start a transaction, update a table, flush the updates to disk, and abort (instead of committing). Remember to print the table contents at the end, and run your implementation with `bash scripts/test.sh queryTest.sql`. You should observe that none of the updates are undone - by the end of this assignment, this should no longer be the case.
@@ -73,7 +74,7 @@ While you do not need to touch this file, BufferPool.java also contains code rel
 
 Your first job is to enforce the atomicity property of database transactions. In particular, any transaction that aborts before committing and releasing its locks must have its changes to the database undone. With our scheme of page-level locking, we can overwrite the pages changed by aborted transactions with the before-images stored in the log file.
 
-Implement the `rollback()` function in `LogFile.java`, which will be called when a transaction aborts. `rollback()` should read the log file, find all update records associated with the aborting transaction, extract the before-image from each, and write the before-image to the table file. Remember to replace any page in the buffer pool whose before-image you write back to the table file.
+Implement the `rollback()` function in `LogFile.java`, which will be called when a transaction aborts. `rollback()` should read the log file, find all update records associated with the aborting transaction, extract the before-image from each, and write the before-image to the table file. (Previously, the instructions here said to replace any page in the buffer pool whose before-image you write back to the table file. You do not need to worry about this, as the buffer pool page will be removed and does not need to be undone.)
 
 After completing this exercise, you should be able to pass the TestAbort and TestAbortCommitInterleaved subtests of the LogTest system test.
 
