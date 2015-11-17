@@ -694,6 +694,8 @@ public class Parser {
                             Database.getBufferPool().flushAllPages();
                         } else if (cmd.equalsIgnoreCase("### checkpoint;")) {
                             Database.getLogFile().logCheckpoint();
+                        } else if (cmd.equalsIgnoreCase("### printlog;")) {
+                            Database.getLogFile().print();
                         } else {
                             processInput(cmd);
                         }
