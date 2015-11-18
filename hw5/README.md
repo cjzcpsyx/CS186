@@ -109,7 +109,7 @@ Implement the `recover()` function in `LogFile.java`, which will be called on a 
 
 - When scanning forward, you will need to track all of the loser transactions that will need to be undone in the UNDO phase. Loser transactions are transactions that have not completed by the time you reach the end of the LogFile.
 
-- After you are done with recovery, make sure that your `raf` file pointer is at the beginning of the last complete log record.
+- After you are done with recovery, make sure that your `raf` file pointer is at the end of the last complete log record.
   
 After completing this exercise, you should be able to pass the entirety of the LogTest system test. You can also write a simple test for recovery using `queryTest.sql`, using the `### crash;` command - can you figure out what, exactly, you want to test?
 
