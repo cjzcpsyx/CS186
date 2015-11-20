@@ -690,6 +690,8 @@ public class Parser {
                         }
                         if (cmd.equalsIgnoreCase("### crash;")) {
                             Utility.crashAndRestart();
+                            curtrans = null;
+                            inUserTrans = false;
                         } else if (cmd.equalsIgnoreCase("### flush;")) {
                             Database.getBufferPool().flushAllPages();
                         } else if (cmd.equalsIgnoreCase("### checkpoint;")) {
@@ -742,6 +744,8 @@ public class Parser {
                     }
                     if (cmd.equalsIgnoreCase("### crash;")) {
                         Utility.crashAndRestart();
+                        curtrans = null;
+                        inUserTrans = false;
                     } else if (cmd.equalsIgnoreCase("### flush;")) {
                         Database.getBufferPool().flushAllPages();
                     } else if (cmd.equalsIgnoreCase("### checkpoint;")) {
