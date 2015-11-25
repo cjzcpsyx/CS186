@@ -439,6 +439,56 @@ public class LogFile {
             synchronized(this) {
                 preAppend();
                 // some code goes here
+                long curOffset = raf.getFilePointer();
+
+                long record = tidToFirstLogRecord.get(tid.getId());
+                raf.seek(record);
+                Stack<Page> rollbackStack = new Stack<Page>();
+
+                while (true) {
+                    try {
+                        int cpType = raf.readInt();
+                        long cpTid = raf.readLong();
+
+                        switch (cpType) {
+                        case BEGIN_RECORD:
+                            raf.readLong();
+                            break;
+                        case ABORT_RECORD:
+                            raf.readLong();
+                            break;
+                        case COMMIT_RECORD:
+                            raf.readLong();
+                            break;
+                        case CHECKPOINT_RECORD:
+                            int numTransactions = raf.readInt();
+                            while (numTransactions-- > 0) {
+                                raf.readLong();
+                                raf.readLong();
+                            }
+                            raf.readLong();
+                            break;
+                        case UPDATE_RECORD:
+                            Page before = readPageData(raf);
+                            readPageData(raf);
+                            if (cpTid == tid.getId()) {
+                                rollbackStack.push(before);
+                            }
+                            raf.readLong();
+                            break;
+                        }
+                    } catch (EOFException e) {
+                        break;
+                    }
+                }
+
+                while (!rollbackStack.empty()) {
+                    Page current = rollbackStack.pop();
+                    Database.getBufferPool().replacePage(current.getId(), current);
+                }
+                Database.getBufferPool().flushAllPages();
+                
+                raf.seek(curOffset);
             }
         }
     }
@@ -466,6 +516,168 @@ public class LogFile {
             synchronized (this) {
                 recoveryUndecided = false;
                 // some code goes here
+                long curOffset = raf.getFilePointer();
+
+                long checkpointOffset = 0;
+                HashMap<Long, ArrayList<Page>> uncommittedUpdate = new HashMap<Long, ArrayList<Page>>();
+                ArrayList<Long> uncommittedTid = new ArrayList<Long>();
+
+
+                raf.seek(0);
+                raf.readLong();
+                while (true) {
+                    try {
+                        int cpType = raf.readInt();
+                        long cpTid = raf.readLong();
+
+                        switch (cpType) {
+                        case BEGIN_RECORD:
+                            raf.readLong();
+                            break;
+                        case ABORT_RECORD:
+                            raf.readLong();
+                            break;
+                        case COMMIT_RECORD:
+                            raf.readLong();
+                            break;
+                        case CHECKPOINT_RECORD:
+                            int numTransactions = raf.readInt();
+                            while (numTransactions-- > 0) {
+                                raf.readLong();
+                                raf.readLong();
+                            }
+                            checkpointOffset = raf.readLong();
+                            break;
+                        case UPDATE_RECORD:
+                            readPageData(raf);
+                            readPageData(raf);
+                            raf.readLong();
+                            break;
+                        }
+                    } catch (EOFException e) {
+                        break;
+                    }
+                }
+
+                raf.seek(checkpointOffset);
+                if (checkpointOffset == 0) {
+                    raf.readLong();
+                } else {
+                    raf.readInt();
+                    raf.readLong();
+                    int numTransactions = raf.readInt();
+                    while (numTransactions-- > 0) {
+                        long tid = raf.readLong();
+                        uncommittedTid.add(tid);
+                        raf.readLong();
+                    }
+                    raf.readLong();
+                }
+                while (true) {
+                    try {
+                        int cpType = raf.readInt();
+                        long cpTid = raf.readLong();
+
+                        switch (cpType) {
+                        case BEGIN_RECORD:
+                            raf.readLong();
+                            break;
+                        case ABORT_RECORD:
+                            ArrayList<Page> undos = uncommittedUpdate.get(cpTid);
+                            for (int i=undos.size()-1; i>=0; i--) {
+                                Database.getBufferPool().replacePage(undos.get(i).getId(), undos.get(i));
+                            }
+                            uncommittedTid.remove(cpTid);
+                            uncommittedUpdate.remove(cpTid);
+                            raf.readLong();
+                            break;
+                        case COMMIT_RECORD:
+                            uncommittedTid.remove(cpTid);
+                            uncommittedUpdate.remove(cpTid);
+                            raf.readLong();
+                            break;
+                        case CHECKPOINT_RECORD:
+                            int numTransactions = raf.readInt();
+                            while (numTransactions-- > 0) {
+                                raf.readLong();
+                                raf.readLong();
+                            }
+                            raf.readLong();
+                            break;
+                        case UPDATE_RECORD:
+                            Page before = readPageData(raf);
+                            Page after = readPageData(raf);
+                            Database.getBufferPool().replacePage(after.getId(), after);
+                            if (!uncommittedTid.contains(cpTid)) {
+                                uncommittedTid.add(cpTid);
+                            }
+                            if (uncommittedUpdate.containsKey(cpTid)) {
+                                ArrayList<Page> list = uncommittedUpdate.get(cpTid);
+                                list.add(before);
+                                uncommittedUpdate.put(cpTid, list);
+                            } else {
+                                ArrayList<Page> list = new ArrayList<Page>();
+                                list.add(before);
+                                uncommittedUpdate.put(cpTid, list);
+                            }
+                            raf.readLong();
+                            break;
+                        }
+                    } catch (EOFException e) {
+                        break;
+                    }
+                }
+
+                if (uncommittedTid.size()>0) {
+                    raf.seek(0);
+                    raf.readLong();
+                    Stack<Page> rollbackStack = new Stack<Page>();
+
+                    while (true) {
+                        try {
+                            int cpType = raf.readInt();
+                            long cpTid = raf.readLong();
+
+                            switch (cpType) {
+                            case BEGIN_RECORD:
+                                raf.readLong();
+                                break;
+                            case ABORT_RECORD:
+                                raf.readLong();
+                                break;
+                            case COMMIT_RECORD:
+                                raf.readLong();
+                                break;
+                            case CHECKPOINT_RECORD:
+                                int numTransactions = raf.readInt();
+                                while (numTransactions-- > 0) {
+                                    raf.readLong();
+                                    raf.readLong();
+                                }
+                                raf.readLong();
+                                break;
+                            case UPDATE_RECORD:
+                                Page before = readPageData(raf);
+                                readPageData(raf);
+                                if (uncommittedTid.contains(cpTid)) {
+                                    rollbackStack.push(before);
+                                }
+                                raf.readLong();
+                                break;
+                            }
+                        } catch (EOFException e) {
+                            break;
+                        }
+                    }
+
+                    while (!rollbackStack.empty()) {
+                        Page current = rollbackStack.pop();
+                        Database.getBufferPool().replacePage(current.getId(), current);
+                    }
+                }
+                Database.getBufferPool().flushAllPages();
+
+                raf.seek(curOffset);
             }
          }
     }
